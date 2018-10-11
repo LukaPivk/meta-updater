@@ -164,7 +164,11 @@ IMAGE_CMD_ostree () {
            --branch=${OSTREE_BRANCHNAME} \
            --subject="${OSTREE_COMMIT_SUBJECT}" \
            --body="${OSTREE_COMMIT_BODY}"
-    
+
+    if [ -n "${OSTREE_UPDATE_SUMMARY}" ]; then
+        ostree --repo=${OSTREE_REPO} summary -u
+    fi
+
     rm -rf ${OSTREE_ROOTFS}
 }
 
