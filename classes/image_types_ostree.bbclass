@@ -5,6 +5,7 @@ OSTREE_ROOTFS ??= "${WORKDIR}/ostree-rootfs"
 OSTREE_COMMIT_SUBJECT ??= "Commit-id: ${IMAGE_NAME}"
 OSTREE_COMMIT_BODY ??= ""
 OSTREE_UPDATE_SUMMARY ??= "0"
+OSTREE_DEPLOY_DEVICETREE ??= "0"
 
 BUILD_OSTREE_TARBALL ??= "1"
 
@@ -121,6 +122,13 @@ IMAGE_CMD_ostree () {
         touch boot/initramfs-${checksum}
     else
         cp ${DEPLOY_DIR_IMAGE}/${INITRAMFS_IMAGE}-${MACHINE}.${INITRAMFS_FSTYPES} boot/initramfs-${checksum}
+        if [ "${OSTREE_DEPLOY_DEVICETREE}" = "1"  ]; then
+            if test -n "${KERNEL_DEVICETREE}"; then
+                for DTS_FILE in ${KERNEL_DEVICETREE}; do
+                    cp ${DEPLOY_DIR_IMAGE}/${DTS_FILE} boot/devicetree-${DTS_FILE}-${checksum}
+                done
+            fi
+        fi
     fi
 
     # Copy image manifest
